@@ -2,5 +2,7 @@
 {
     public class XYZ
     {
+        public string url { get; set; }
+
     }
 }

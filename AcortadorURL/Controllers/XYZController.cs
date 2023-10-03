@@ -7,5 +7,10 @@ namespace AcortadorURL.Controllers
     [ApiController]
     public class XYZController : ControllerBase
     {
+        [HttpGet]
+        public IActionResult GetURL() 
+        {
+            return Ok();
+        }
     }
 }
