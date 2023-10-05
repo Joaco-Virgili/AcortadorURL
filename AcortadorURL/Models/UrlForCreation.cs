@@ -2,6 +2,6 @@
 {
     public class UrlForCreation
     {
-        public string LongUrl { get; set; }
+        public string LongUrl { get; set; } = string.Empty;
     }
 }
