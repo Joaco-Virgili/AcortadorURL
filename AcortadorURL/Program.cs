@@ -1,3 +1,6 @@
+using AcortadorURL.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace AcortadorURL
 {
     public class Program
@@ -12,6 +15,8 @@ namespace AcortadorURL
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<UrlContext>(DbContextOptions => DbContextOptions.UseSqlite(
+                builder.Configuration["ConnectionStrings:AcortadorURLDBConnectionString"]));
 
             var app = builder.Build();
 
