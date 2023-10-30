@@ -28,20 +28,19 @@ namespace AcortadorURL.Controllers
             }
 
             // Validar la URL larga aquí si es necesario
-
-            string randomChars = GenerateRandomChars(6); // Cambia 6 por la longitud deseada
-            string shortUrl = $"https://localhost:4200/{randomChars}";
+             // Cambia 6 por la longitud deseada
+            
             var url = new Url
             {
                 LongUrl = urlForCreation.LongUrl,
-                ShortUrl = shortUrl
-            };
+                ShortUrl = GenerateRandomChars(6)
+        };
 
             _urlContext.Urls.Add(url);
             _urlContext.SaveChanges();
             // Guardar la relación entre la URL corta y la URL larga (en la base de datos o en memoria)
 
-            return Ok(new Url { Id = url.Id, LongUrl = urlForCreation.LongUrl, ShortUrl = shortUrl });
+            return Ok(url);
         }
 
         private string GenerateRandomChars(int length)
@@ -50,6 +49,13 @@ namespace AcortadorURL.Controllers
             Random random = new Random();
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        [HttpGet("{code}")]
+        public IActionResult RedirectUrl(string code)
+        {
+            string url = _urlContext.Urls.SingleOrDefault(url => url.ShortUrl == code).LongUrl;
+            return url == null ? NotFound() : Redirect(url);
         }
     }
 }
