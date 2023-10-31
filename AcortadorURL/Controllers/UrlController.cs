@@ -4,6 +4,7 @@ using AcortadorURL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;
 using AcortadorURL.Helpers;
+using AcortadorURL.Services;
 
 
 namespace AcortadorURL.Controllers
@@ -12,44 +13,25 @@ namespace AcortadorURL.Controllers
     [ApiController]
     public class UrlController : ControllerBase
     {
-        private readonly UrlContext _urlContext;
-        private readonly UrlHelper _urlHelper;
-        public UrlController(UrlContext urlContext, UrlHelper urlHelper)
+        private readonly IUrlService _urlService;
+
+        public UrlController(IUrlService urlService)
         {
-            _urlContext = urlContext;
-            _urlHelper = urlHelper;
+            _urlService = urlService;
         }
 
         [HttpPost]
         public IActionResult ShortenUrl([FromBody] UrlForCreation urlForCreation)
         {
-            var existingMapping = _urlContext.Urls.FirstOrDefault(m => m.LongUrl == urlForCreation.LongUrl);
-
-            if (existingMapping != null)
-            {
-                return Ok(new Url { Id = existingMapping.Id, LongUrl = urlForCreation.LongUrl, ShortUrl = existingMapping.ShortUrl });
-            }
-
-            // Validar la URL larga aquí si es necesario
-             // Cambia 6 por la longitud deseada
-            
-            var url = new Url
-            {
-                LongUrl = urlForCreation.LongUrl,
-                ShortUrl = _urlHelper.GenerateRandomChars(6)
-            };
-
-            _urlContext.Urls.Add(url);
-            _urlContext.SaveChanges();
+            var url = _urlService.ShortenUrl(urlForCreation.LongUrl);
 
             return Ok(url);
         }
 
-
         [HttpGet("{code}")]
         public IActionResult RedirectUrl(string code)
         {
-            var urlEntry = _urlContext.Urls.SingleOrDefault(url => url.ShortUrl == code);
+            var urlEntry = _urlService.GetUrlByShortCode(code);
 
             if (urlEntry != null && urlEntry.LongUrl != null)
             {
@@ -62,4 +44,5 @@ namespace AcortadorURL.Controllers
             }
         }
     }
+
 }
