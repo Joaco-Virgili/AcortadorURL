@@ -49,7 +49,7 @@ namespace AcortadorURL.Controllers
         [HttpGet("{code}")]
         public IActionResult RedirectUrl(string code)
         {
-            var urlEntry = _urlContext.Urls?.SingleOrDefault(url => url.ShortUrl == code);
+            var urlEntry = _urlContext.Urls.SingleOrDefault(url => url.ShortUrl == code);
 
             if (urlEntry != null && urlEntry.LongUrl != null)
             {
