@@ -3,6 +3,7 @@ using AcortadorURL.Entities;
 using AcortadorURL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;
+using AcortadorURL.Helpers;
 
 
 namespace AcortadorURL.Controllers
@@ -12,9 +13,11 @@ namespace AcortadorURL.Controllers
     public class UrlController : ControllerBase
     {
         private readonly UrlContext _urlContext;
-        public UrlController(UrlContext urlContext)
+        private readonly UrlHelper _urlHelper;
+        public UrlController(UrlContext urlContext, UrlHelper urlHelper)
         {
             _urlContext = urlContext;
+            _urlHelper = urlHelper;
         }
 
         [HttpPost]
@@ -33,29 +36,27 @@ namespace AcortadorURL.Controllers
             var url = new Url
             {
                 LongUrl = urlForCreation.LongUrl,
-                ShortUrl = GenerateRandomChars(6)
-        };
-
-            _urlContext.Urls.Add(url);
-            _urlContext.SaveChanges();
-            // Guardar la relación entre la URL corta y la URL larga (en la base de datos o en memoria)
+                ShortUrl = _urlHelper.GenerateRandomChars(6)
+            };
 
             return Ok(url);
         }
 
-        private string GenerateRandomChars(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            Random random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
 
         [HttpGet("{code}")]
         public IActionResult RedirectUrl(string code)
         {
-            string url = _urlContext.Urls.SingleOrDefault(url => url.ShortUrl == code).LongUrl;
-            return url == null ? NotFound() : Redirect(url);
+            var urlEntry = _urlContext.Urls?.SingleOrDefault(url => url.ShortUrl == code);
+
+            if (urlEntry != null && urlEntry.LongUrl != null)
+            {
+                string url = urlEntry.LongUrl;
+                return Redirect(url);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
