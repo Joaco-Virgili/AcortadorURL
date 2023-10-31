@@ -39,6 +39,9 @@ namespace AcortadorURL.Controllers
                 ShortUrl = _urlHelper.GenerateRandomChars(6)
             };
 
+            _urlContext.Urls.Add(url);
+            _urlContext.SaveChanges();
+
             return Ok(url);
         }
 
