@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AcortadorURL.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
        {
@@ -23,7 +23,7 @@ namespace AcortadorURL.Controllers
 
             }
 
-            [HttpPost("authenticate")] //Vamos a usar un POST ya que debemos enviar los datos para hacer el login
+            [HttpPost("auth")] //Vamos a usar un POST ya que debemos enviar los datos para hacer el login
             public IActionResult Autenticar(AuthRequestBody authRequestBody) //Enviamos como parámetro la clase que creamos arriba
             {
                 //Paso 1: Validamos las credenciales
@@ -44,8 +44,8 @@ namespace AcortadorURL.Controllers
                
 
                 var jwtSecurityToken = new JwtSecurityToken( //agregar using System.IdentityModel.Tokens.Jwt; Acá es donde se crea el token con toda la data que le pasamos antes.
-                  _config["Authentication:Issuer"],
-                  _config["Authentication:Audience"],
+                  _config["Auth:Issuer"],
+                  _config["Auth:Audience"],
                   claimsForToken,
                   DateTime.UtcNow,
                   DateTime.UtcNow.AddHours(1),

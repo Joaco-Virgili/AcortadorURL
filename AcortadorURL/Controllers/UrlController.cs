@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;
 using AcortadorURL.Helpers;
 using AcortadorURL.Services;
-
+using System.Security.Claims;
 
 namespace AcortadorURL.Controllers
 {
@@ -23,9 +23,9 @@ namespace AcortadorURL.Controllers
         [HttpPost]
         public IActionResult ShortenUrl([FromBody] UrlForCreation urlForCreation)
         {
-            var url = _urlService.ShortenUrl(urlForCreation.LongUrl);
-
-            return Ok(url);
+            int userId = Int32.Parse(User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Sid)?.Value);
+            var url = _urlService.ShortenUrl(urlForCreation.LongUrl, userId);
+            return Ok();
         }
 
         [HttpGet("{code}")]

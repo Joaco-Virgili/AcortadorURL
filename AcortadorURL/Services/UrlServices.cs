@@ -7,7 +7,7 @@ namespace AcortadorURL.Services
     // IUrlService.cs
     public interface IUrlService
     {
-        Url ShortenUrl(string longUrl);
+        Url ShortenUrl(string longUrl, int userId);
         Url GetUrlByShortCode(string shortCode);
     }
 
@@ -23,19 +23,20 @@ namespace AcortadorURL.Services
             _urlHelper = urlHelper;
         }
 
-        public Url ShortenUrl(string longUrl)
+        public Url ShortenUrl(string longUrl, int userId)
         {
             var existingMapping = _urlContext.Urls.FirstOrDefault(m => m.LongUrl == longUrl);
 
             if (existingMapping != null)
             {
-                return new Url { Id = existingMapping.Id, LongUrl = longUrl, ShortUrl = existingMapping.ShortUrl };
+                return new Url { Id = existingMapping.Id, LongUrl = longUrl, ShortUrl = existingMapping.ShortUrl, UserId = userId};
             }
 
             var url = new Url
             {
                 LongUrl = longUrl,
-                ShortUrl = _urlHelper.GenerateRandomChars(6)
+                ShortUrl = _urlHelper.GenerateRandomChars(6),
+                UserId = userId
             };
 
             _urlContext.Urls.Add(url);
