@@ -2,6 +2,7 @@
 using AcortadorURL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcortadorURL.Migrations
 {
     [DbContext(typeof(UrlContext))]
-    partial class UrlContextModelSnapshot : ModelSnapshot
+    [Migration("20231031215345_Nueva db")]
+    partial class Nuevadb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -91,13 +93,13 @@ namespace AcortadorURL.Migrations
 
             modelBuilder.Entity("AcortadorURL.Entities.Url", b =>
                 {
-                    b.HasOne("AcortadorURL.Entities.User", "User")
+                    b.HasOne("AcortadorURL.Entities.User", "user")
                         .WithMany("Urls")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("AcortadorURL.Entities.User", b =>
