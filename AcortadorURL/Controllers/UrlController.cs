@@ -21,11 +21,10 @@ namespace AcortadorURL.Controllers
         }
 
         [HttpPost]
-        public IActionResult ShortenUrl([FromBody] UrlForCreation urlForCreation)
+        public IActionResult Shorten([FromBody] UrlForCreation url)
         {
-            int userId = Int32.Parse(User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Sid)?.Value);
-            var url = _urlService.ShortenUrl(urlForCreation.LongUrl, userId);
-            return Ok();
+            int userId = Int32.Parse(User.Claims.First(claim => claim.Type.Contains("nameidentifier")).Value);
+            return Ok(_urlService.Add(url, userId));
         }
 
         [HttpGet("{code}")]

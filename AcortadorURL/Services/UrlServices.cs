@@ -1,13 +1,16 @@
 ﻿using AcortadorURL.Data;
 using AcortadorURL.Entities;
 using AcortadorURL.Helpers;
+using AcortadorURL.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AcortadorURL.Services
 {
     // IUrlService.cs
     public interface IUrlService
     {
-        Url ShortenUrl(string longUrl, int userId);
+        string Add(UrlForCreation url, int userId);
         Url GetUrlByShortCode(string shortCode);
     }
 
@@ -23,26 +26,18 @@ namespace AcortadorURL.Services
             _urlHelper = urlHelper;
         }
 
-        public Url ShortenUrl(string longUrl, int userId)
+        public string Add(UrlForCreation url, int userId)
         {
-            var existingMapping = _urlContext.Urls.FirstOrDefault(m => m.LongUrl == longUrl);
 
-            if (existingMapping != null)
+            Url newUrl = new Url()
             {
-                return new Url { Id = existingMapping.Id, LongUrl = longUrl, ShortUrl = existingMapping.ShortUrl, UserId = userId};
-            }
-
-            var url = new Url
-            {
-                LongUrl = longUrl,
+                LongUrl = url.LongUrl,
                 ShortUrl = _urlHelper.GenerateRandomChars(6),
                 UserId = userId
             };
-
-            _urlContext.Urls.Add(url);
+            _urlContext.Urls.Add(newUrl);
             _urlContext.SaveChanges();
-
-            return url;
+            return newUrl.ShortUrl;
         }
 
         public Url GetUrlByShortCode(string shortCode)
@@ -50,7 +45,7 @@ namespace AcortadorURL.Services
             var url = _urlContext.Urls.SingleOrDefault(url => url.ShortUrl == shortCode);
             if (url == null)
             {
-                return new Url { LongUrl = null, ShortUrl = null};
+                return new Url { LongUrl = null, ShortUrl = null };
             }
             return url;
         }
