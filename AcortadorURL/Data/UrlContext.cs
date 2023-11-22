@@ -35,6 +35,8 @@ namespace AcortadorURL.Data
                 Id = 1,
                 LongUrl = "https://google.com",
                 ShortUrl = "ad3Er5",
+                CountClicks = 1,
+                Category = "Buscador",
                 UserId = pepe.Id
             };
 
@@ -43,6 +45,8 @@ namespace AcortadorURL.Data
                 Id = 2,
                 LongUrl = "https://youtube.com",
                 ShortUrl = "Lo25Te",
+                CountClicks = 5,
+                Category = "Entretenimiento",
                 UserId = joaco.Id
             };
 

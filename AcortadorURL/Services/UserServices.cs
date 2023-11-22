@@ -9,6 +9,7 @@ namespace AcortadorURL.Services
     {
         User? ValidateUser(AuthRequestBody authRequestBody);
         void Create(UserForCreation user);
+        List<Url> GetUrls(int userId);
     }
 
     public class UserServices : IUserService
@@ -18,6 +19,12 @@ namespace AcortadorURL.Services
         {
             _urlContext = urlContext;
         }
+
+        public List<Url> GetUrls(int userId)
+        {
+           return _urlContext.Users.Where(user => user.Id == userId).SelectMany(user => user.Urls).ToList();
+        }
+
         public void Create(UserForCreation user)
         {
             User newUser = new User()

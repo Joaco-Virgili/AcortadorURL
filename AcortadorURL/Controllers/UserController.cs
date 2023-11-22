@@ -1,6 +1,7 @@
 ﻿using AcortadorURL.Entities;
 using AcortadorURL.Models;
 using AcortadorURL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,15 @@ namespace AcortadorURL.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public IActionResult GetUrlByUser()
+        {
+            int userId = Int32.Parse(User.Claims.First(claim => claim.Type.Contains("nameidentifier")).Value);
+            List<Url> urls = _userServices.GetUrls(userId);
+            return Ok(urls);
         }
     }
 }

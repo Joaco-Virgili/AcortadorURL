@@ -2,6 +2,7 @@
 using AcortadorURL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcortadorURL.Migrations
 {
     [DbContext(typeof(UrlContext))]
-    partial class UrlContextModelSnapshot : ModelSnapshot
+    [Migration("20231108150716_CountClicksUpdate")]
+    partial class CountClicksUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -22,16 +24,11 @@ namespace AcortadorURL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("CountClicks")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LongUrl")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ShortUrl")
@@ -51,7 +48,6 @@ namespace AcortadorURL.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "Buscador",
                             CountClicks = 1,
                             LongUrl = "https://google.com",
                             ShortUrl = "ad3Er5",
@@ -60,7 +56,6 @@ namespace AcortadorURL.Migrations
                         new
                         {
                             Id = 2,
-                            Category = "Entretenimiento",
                             CountClicks = 5,
                             LongUrl = "https://youtube.com",
                             ShortUrl = "Lo25Te",
